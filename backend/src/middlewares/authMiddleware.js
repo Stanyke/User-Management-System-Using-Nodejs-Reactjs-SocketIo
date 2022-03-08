@@ -1,6 +1,6 @@
 const authTokenExplorer = require("../utils/authTokenExplorer");
 const UserService = require("../services/UserServices");
-const { MSG_TYPES, ACCOUNT_TYPES } = require("../../constants/types");
+const { MSG_TYPES } = require("../../constants/types");
 const { appResponse } = require("../../lib/appResponse");
 
 exports.identify = async (req, res, next) => {
