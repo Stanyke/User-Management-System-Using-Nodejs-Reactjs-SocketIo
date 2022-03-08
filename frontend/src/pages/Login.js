@@ -11,7 +11,7 @@ import {
 
 import { AuthStyle } from "../assets/css/AuthStyle";
 import AuthSidebar from "../components/AuthSidebar";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useApp from "../store/contexts/AppContext";
 
 const useStyles = makeStyles((theme) => AuthStyle(theme));
@@ -24,7 +24,7 @@ export default function Login() {
   } = useApp();
 
   const classes = useStyles();
-  const history = useHistory();
+  const history = useNavigate();
 
   const handleLogin = async (event) => {
     event.preventDefault();

@@ -12,7 +12,7 @@ exports.identify = async (req, res, next) => {
 
     const user = await UserService.findById(decoded.id);
     if (user) {
-      req.auth = user;
+      req.user = user;
       return next();
     }
 

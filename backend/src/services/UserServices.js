@@ -13,6 +13,7 @@ class UserService {
   }
 
   async findAll(data) {
+    data = data ?? {};
     return await User.find(data, "-__v");
   }
 }

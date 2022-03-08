@@ -20,7 +20,6 @@ class UserCtrl {
 
       return appResponse(res, 201, MSG_TYPES.USER_CREATED, data);
     } catch (err) {
-      console.log('ssssssssss', err)
       return appResponse(res, 500, MSG_TYPES.SERVER_ERROR(err));
     }
   }
@@ -48,7 +47,7 @@ class UserCtrl {
 
   //get all users
   async getAllUsers(req, res) {
-    const users = UserService.findAll();
+    const users = await UserService.findAll();
     return appResponse(res, 200, MSG_TYPES.FETCHED, users);
   }
 
@@ -56,6 +55,8 @@ class UserCtrl {
   async getOneUser(req, res) {
     const userId = req.params.id;
     const user = await UserService.findOne({ _id: userId });
+    if (!user) return appResponse(res, 404, MSG_TYPES.USER_NOT_FOUND);
+    return appResponse(res, 200, MSG_TYPES.FETCHED, user);
   }
 }
 

@@ -21,7 +21,7 @@ module.exports = function () {
 
   router.get(
     "/users/:id",
-    joiValidator(UserIdSchema),
+    joiValidator(UserIdSchema, "params"),
     identify,
     userCtrl.getOneUser
   );

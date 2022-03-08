@@ -12,6 +12,7 @@ const MSG_TYPES = Object.freeze({
   INVALID_TOKEN: "Invalid token provided",
   LOGGED_IN: "Successfully logged in",
   USER_CREATED: "Registration successful",
+  USER_NOT_FOUND: "User not found",
   EMAIL_EXIST: "Email address already in use",
   INVALID_CREDENTIALS: "Invalid credentials",
   PERMISSION: "You don't have enough permission to perform this action",
