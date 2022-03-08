@@ -26,5 +26,11 @@ module.exports = function () {
     userCtrl.getOneUser
   );
 
+  router.get(
+    "/users/view-profile/me",
+    identify,
+    userCtrl.viewProfile
+  );
+
   return router;
 };

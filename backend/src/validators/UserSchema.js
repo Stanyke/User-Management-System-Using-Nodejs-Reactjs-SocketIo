@@ -5,7 +5,7 @@ const UserRegistrationSchema = Joi.object({
   lastname: Joi.string().required(),
   email: Joi.string().lowercase().required(),
   password: Joi.string().required(),
-  gender: Joi.string().required().valid("male", "female"),
+  gender: Joi.string().required().valid("male", "Male", "female", "Female"),
   department: Joi.string().required(),
 });
 

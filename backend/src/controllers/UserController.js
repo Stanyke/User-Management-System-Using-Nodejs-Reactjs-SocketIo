@@ -58,6 +58,12 @@ class UserCtrl {
     if (!user) return appResponse(res, 404, MSG_TYPES.USER_NOT_FOUND);
     return appResponse(res, 200, MSG_TYPES.FETCHED, user);
   }
+
+  async viewProfile(req, res) {
+    const token = await generateToken(req.user);
+    const data = { ...req.user.toJSON(), token };
+    return appResponse(res, 200, MSG_TYPES.FETCHED, data);
+  }
 }
 
 module.exports = new UserCtrl();
