@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Grid,
-  Box,
-  Typography,
-  Button,
-  makeStyles,
-} from "@material-ui/core";
-import WaitForPageLoad from "../components/WaitForPageLoad";
+import { Grid, Box, Typography, Button, makeStyles } from "@material-ui/core";
 
 import { AuthStyle } from "../assets/css/AuthStyle";
 import AuthSidebar from "../components/auth/AuthSidebar";
@@ -19,7 +12,7 @@ const { REACT_APP_AFTER_LOGIN_REDIRECT_URL } = process.env;
 
 export default function Auth() {
   const {
-    appState: { userToken, isLoading },
+    appState: { userToken },
   } = useApp();
   const [currentForm, setCurrentForm] = useState("login");
   let navigate = useNavigate();
@@ -34,60 +27,56 @@ export default function Auth() {
     if (userToken) {
       navigate(REACT_APP_AFTER_LOGIN_REDIRECT_URL);
     }
-  }, [userToken]);
+  }, [userToken, navigate]);
 
-  if (!isLoading) {
-    return <WaitForPageLoad />;
-  } else {
-    return (
-      <Grid container className={classes.homeScreen}>
-        <AuthSidebar styles={classes} />
+  return (
+    <Grid container className={classes.homeScreen}>
+      <AuthSidebar styles={classes} />
 
-        <Box className={classes.rightSideContainer}>
-          <Grid className={classes.formBox}>
-            <Box>
-              <Grid container spacing={2} className={classes.highliter}>
-                <Grid item xs={6}>
-                  <Button
-                    type="button"
-                    variant="contained"
-                    size="small"
-                    className={classes.authSmallBtn}
-                    onClick={() => handleForms("login")}
-                    disabled={currentForm === "login" ? true : false}
-                  >
-                    Login
-                  </Button>
-                </Grid>
-                <Grid item xs={6}>
-                  <Button
-                    type="button"
-                    variant="contained"
-                    size="small"
-                    className={classes.authSmallBtn}
-                    onClick={() => handleForms("register")}
-                    disabled={currentForm === "login" ? false : true}
-                  >
-                    Register
-                  </Button>
-                </Grid>
+      <Box className={classes.rightSideContainer}>
+        <Grid className={classes.formBox}>
+          <Box>
+            <Grid container spacing={2} className={classes.highliter}>
+              <Grid item xs={6}>
+                <Button
+                  type="button"
+                  variant="contained"
+                  size="small"
+                  className={classes.authSmallBtn}
+                  onClick={() => handleForms("login")}
+                  disabled={currentForm === "login" ? true : false}
+                >
+                  Login
+                </Button>
               </Grid>
-            </Box>
+              <Grid item xs={6}>
+                <Button
+                  type="button"
+                  variant="contained"
+                  size="small"
+                  className={classes.authSmallBtn}
+                  onClick={() => handleForms("register")}
+                  disabled={currentForm === "login" ? false : true}
+                >
+                  Register
+                </Button>
+              </Grid>
+            </Grid>
+          </Box>
 
+          <Box>
             <Box>
-              <Box>
-                <Typography className={classes.formNotice}>
-                  {currentForm === "login" ? "Hello!" : "Register"}
-                </Typography>
-              </Box>
-
-              <Box className={classes.boxContainer}>
-                <AuthForm type={currentForm} classes={classes} />
-              </Box>
+              <Typography className={classes.formNotice}>
+                {currentForm === "login" ? "Hello!" : "Register"}
+              </Typography>
             </Box>
-          </Grid>
-        </Box>
-      </Grid>
-    );
-  }
+
+            <Box className={classes.boxContainer}>
+              <AuthForm type={currentForm} classes={classes} />
+            </Box>
+          </Box>
+        </Grid>
+      </Box>
+    </Grid>
+  );
 }

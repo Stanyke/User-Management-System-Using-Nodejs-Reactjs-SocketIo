@@ -1,4 +1,4 @@
-const { io } = require("./index");
+const { io } = require("./server");
 const userService = require("./src/services/UserServices");
 
 io.on("connection", (socket) => {
