@@ -2,29 +2,23 @@ import backgroundImage from "../images/bg-img.png";
 
 export const AuthStyle = (theme) => {
   return {
-    root: {
-      "& > *": {
-        margin: theme.spacing(1),
-        width: "25ch",
-      },
-    },
     homeScreen: {
       display: "grid",
       gridTemplateColumns: "40% 60%",
-      
+
       "@media (max-width: 700px)": {
-        gridTemplateColumns: "100%"
-      }
+        gridTemplateColumns: "100%",
+      },
     },
     leftSideContainer: {
       position: "relative",
       backgroundImage: `linear-gradient(to top, #0c499ca6, #0dcfef3d), url(${backgroundImage})`,
       height: "100vh",
       backgroundSize: "cover",
-      
+
       "@media (max-width: 700px)": {
-        display: "none"
-      }
+        display: "none",
+      },
     },
     imageBoxText: {
       top: "35%",
@@ -51,9 +45,9 @@ export const AuthStyle = (theme) => {
         "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
     },
     rightSideContainer: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center'
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
     },
     formBox: {
       width: "50%",
@@ -76,7 +70,25 @@ export const AuthStyle = (theme) => {
       marginTop: "50px",
     },
     chatIcon: {
-      fontSize: 100
-    }
+      fontSize: 100,
+    },
+    highliter: {
+      background: "#333",
+      marginTop: "50px",
+      marginBottom: "20px",
+    },
+    authSmallBtn: {
+      background: "#3f92ff",
+      padding: "10px 20px",
+      color: "white",
+      width: "100px",
+    },
+    boxContainer: {
+      width: "100%",
+      maxHeight: "300px",
+      overflowX: "hidden",
+      overflowY: "auto",
+      margin: "auto"
+    },
   };
 };

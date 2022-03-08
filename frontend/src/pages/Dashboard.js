@@ -1,10 +1,7 @@
 import React, { useEffect } from "react";
-import {
-  Box,
-  makeStyles,
-} from "@material-ui/core";
-import Paper from '@mui/material/Paper';
-import { useHistory } from "react-router-dom";
+import { Box, makeStyles } from "@material-ui/core";
+import Paper from "@mui/material/Paper";
+import { useNavigate } from "react-router-dom";
 import WaitForPageLoad from "../components/WaitForPageLoad";
 import Header from "../components/Header";
 import CustomizedTables from "../components/CustomizedTable";
@@ -16,33 +13,35 @@ const useStyles = makeStyles((theme) => DashboardStyle(theme));
 
 export default function Dashboard() {
   const {
-    appState: { username, isLoading, posts },
+    appState: { user, userToken, isLoading, users },
   } = useApp();
   const classes = useStyles();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (!username) {
-      return history.push(process.env.REACT_APP_BEFORE_LOGIN_REDIRECT_URL);
+    if (!userToken) {
+      return navigate(process.env.REACT_APP_BEFORE_LOGIN_REDIRECT_URL);
     }
 
-  }, [username, posts, history]);
+  }, [userToken, users, navigate]);
 
   if (!isLoading) {
     return <WaitForPageLoad />;
   } else {
     return (
       <>
-        <Header user={username} />
-        <Box className={classes.root}>
+        <Header user={user} />
+        {/* <Box className={classes.root}>
           <Box className="container">
-            {Object.values(posts).length ? <CustomizedTables /> : 
-            <Paper>
-              <b>No Posts Available</b>
-            </Paper>
-            }
+            {Object.values(users).length ? (
+              <CustomizedTables />
+            ) : (
+              <Paper>
+                <b>No User Available</b>
+              </Paper>
+            )}
           </Box>
-        </Box>
+        </Box> */}
       </>
     );
   }

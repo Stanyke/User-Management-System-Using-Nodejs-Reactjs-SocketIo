@@ -2,7 +2,10 @@ import * as React from "react";
 import axios from "axios";
 import ACTIONS from "../actions";
 import { useLocation } from "react-router-dom";
-const { DATA_LOADED, SET_ALL_POSTS, SET_USER, LOGOUT_USER, SET_NEW_POST } =
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+const { DATA_LOADED, SET_ALL_USERS, SET_USER, LOGOUT_USER, SET_NEW_USER } =
   ACTIONS;
 
 const { REACT_APP_SERVER_URL, REACT_APP_AFTER_LOGIN_REDIRECT_URL } =
@@ -16,20 +19,22 @@ function useApp() {
 
   const [appState, dispatch] = context;
 
-  const { socket, username } = appState;
+  const { socket, userToken } = appState;
 
   axios.defaults.baseURL = REACT_APP_SERVER_URL;
-  axios.defaults.headers.post["Content-Type"] = "application/json";
+  axios.defaults.headers["Content-Type"] = "application/json";
+  axios.defaults.headers["x-access-token"] = userToken;
 
   React.useEffect(() => {
-    //Only fetch all posts when user is logged in and user is in dashboard
-    username &&
+    //Only fetch all users when user is logged in and user is in dashboard
+    userToken &&
       location.pathname === REACT_APP_AFTER_LOGIN_REDIRECT_URL &&
-      getPostsFromDb();
+      getUsersFromDb() &&
+      getMyProfileFromDb();
 
-    socket.on("recieveNewPost", async (data) => {
+    socket.on("recieveNewUser", async (data) => {
       dispatch({
-        type: SET_NEW_POST,
+        type: SET_NEW_USER,
         payload: data,
       });
     });
@@ -42,51 +47,90 @@ function useApp() {
     });
   };
 
-  const setupUser = ({ username }) => {
-    dispatch({
-      type: SET_USER,
-      payload: username,
-    });
+  const loginUser = async (options) => {
+    try {
+      const { data } = await axios.post("/api/v1/users/login", options);
+      dispatch({
+        type: SET_USER,
+        payload: data.data,
+      });
+      socket.emit("newUser", data.data);
+    } catch (err) {
+      showToast(err.response.data.message);
+    }
   };
 
-  const getPostsFromDb = async () => {
-    const { data } = await axios.get(`/api/v1/posts`);
-    pageLoaderhandler(true);
-    dispatch({
-      type: SET_ALL_POSTS,
-      payload: data.data,
-    });
+  const registerUser = async (options) => {
+    try {
+      const { data } = await axios.post("/api/v1/users/register", options);
+      dispatch({
+        type: SET_USER,
+        payload: data.data,
+      });
+      socket.emit("newUser", data.data);
+    } catch (err) {
+      showToast(err.response.data.message);
+    }
   };
 
-  const removeUsername = async () => {
+  const showToast = async (message) => {
+    toast(message);
+  };
+
+  const getUsersFromDb = async () => {
+    try {
+      const { data } = await axios.get(`/api/v1/users`);
+      pageLoaderhandler(true);
+      dispatch({
+        type: SET_ALL_USERS,
+        payload: data.data,
+      });
+    } catch (err) {
+      showToast(err.response.data.message);
+    }
+  };
+
+  const getMyProfileFromDb = async () => {
+    try {
+      const { data } = await axios.get(`/api/v1/users/view-profile/me`);
+      dispatch({
+        type: SET_USER,
+        payload: data.data,
+      });
+    } catch (err) {
+      showToast(err.response.data.message);
+    }
+  };
+
+  const removeUser = async () => {
     dispatch({
       type: LOGOUT_USER,
       payload: "",
     });
   };
 
-  const submitPost = async (options) => {
+  const submitUser = async (options) => {
     try {
-      const { data } = await axios.post("/api/v1/posts", options);
+      const { data } = await axios.user("/api/v1/users", options);
       dispatch({
-        type: SET_NEW_POST,
+        type: SET_NEW_USER,
         payload: data.data,
       });
-      socket.emit("newPost", data.data);
+      socket.emit("newUser", data.data);
     } catch (err) {
       alert(err.response.data);
     }
   };
 
-  const getPostById = async (postId, command) => {
+  const getUserById = async (userId, command) => {
     try {
       !command && pageLoaderhandler(false);
-      const { data } = await axios.get(`/api/v1/posts/${postId}`);
+      const { data } = await axios.get(`/api/v1/users/${userId}`);
       pageLoaderhandler(true);
       return data.data;
     } catch (err) {
       alert(
-        "Post with such id does not exist or internet connection is not available"
+        "User with such id does not exist or internet connection is not available"
       );
       window.location = REACT_APP_AFTER_LOGIN_REDIRECT_URL;
     }
@@ -94,35 +138,35 @@ function useApp() {
 
   const submitComment = async (options) => {
     try {
-      await axios.post(`/api/v1/posts/${options.postId}/comments`, options);
-      const data = await getPostById(options.postId, "dontLoad");
-      socket.emit("postAndAllComments", data);
+      await axios.user(`/api/v1/users/${options.userId}/comments`, options);
+      const data = await getUserById(options.userId, "dontLoad");
+      socket.emit("userAndAllComments", data);
       return data;
     } catch (err) {
       alert(err.response.data);
     }
   };
 
-  const editPostComment = async (options) => {
+  const editUserComment = async (options) => {
     try {
-      const { postId, commentId, message } = options;
-      await axios.patch(`/api/v1/posts/${postId}/comments/${commentId}`, {
+      const { userId, commentId, message } = options;
+      await axios.patch(`/api/v1/users/${userId}/comments/${commentId}`, {
         message,
       });
-      const data = await getPostById(options.postId, "dontLoad");
-      socket.emit("postAndAllComments", data);
+      const data = await getUserById(options.userId, "dontLoad");
+      socket.emit("userAndAllComments", data);
       return data;
     } catch (err) {
       alert(err.response.data);
     }
   };
 
-  const deletePostComment = async (options) => {
+  const deleteUserComment = async (options) => {
     try {
-      const { postId, commentId } = options;
-      await axios.delete(`/api/v1/posts/${postId}/comments/${commentId}`);
-      const data = await getPostById(postId, "dontLoad");
-      socket.emit("postAndAllComments", data);
+      const { userId, commentId } = options;
+      await axios.delete(`/api/v1/users/${userId}/comments/${commentId}`);
+      const data = await getUserById(userId, "dontLoad");
+      socket.emit("userAndAllComments", data);
       return data;
     } catch (err) {
       alert(err.response.data);
@@ -132,15 +176,17 @@ function useApp() {
   return {
     appState,
     dispatch,
-    setupUser,
-    getPostsFromDb,
-    removeUsername,
-    submitPost,
-    getPostById,
+    loginUser,
+    registerUser,
+    showToast,
+    getUsersFromDb,
+    removeUser,
+    submitUser,
+    getUserById,
     submitComment,
     socket,
-    editPostComment,
-    deletePostComment,
+    editUserComment,
+    deleteUserComment,
   };
 }
 

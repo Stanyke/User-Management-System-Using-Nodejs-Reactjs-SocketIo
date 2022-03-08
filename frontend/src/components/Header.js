@@ -109,7 +109,7 @@ export default function Header(props) {
   const { user } = props;
   const {
     appState: { username },
-    removeUsername,
+    removeUser,
     submitPost,
   } = useApp();
   const classes = useStyles();
@@ -134,7 +134,7 @@ export default function Header(props) {
   };
 
   const logoutUser = async () => {
-    await removeUsername();
+    await removeUser();
   };
 
   const handlePostSubmission = async (event) => {
@@ -188,7 +188,7 @@ export default function Header(props) {
           >
             Create Post
           </Button>
-          <Typography>Hi, {user}</Typography>
+          <Typography>Hi, {user.firstname}</Typography>
           <div className={classes.sectionDesktop}>
             <IconButton
               aria-label="show 4 new mails"

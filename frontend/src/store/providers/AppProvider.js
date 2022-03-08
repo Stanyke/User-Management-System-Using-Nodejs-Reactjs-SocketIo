@@ -6,13 +6,14 @@ const {REACT_APP_SERVER_URL} = process.env;
 
 function AppProvider({children}) {
 
-  const [state, dispatch] = React.useReducer(appReducer, { 
-    username: localStorage.getItem("username"),
-    posts: {},
+  const [state, dispatch] = React.useReducer(appReducer, {
+    user: {},
+    userToken: localStorage.getItem("userToken"),
+    users: {},
     isLoading: false,
     socket: io(REACT_APP_SERVER_URL, {transports: ['websocket'], upgrade: false})
   });
-  
+
   const value = [state, dispatch];
 
   return (

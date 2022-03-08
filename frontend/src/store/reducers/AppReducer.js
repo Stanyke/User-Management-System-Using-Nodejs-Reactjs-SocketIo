@@ -1,38 +1,41 @@
 import ACTIONS from "../actions";
-const { SET_USER, LOGOUT_USER, DATA_LOADED, SET_ALL_POSTS, SET_NEW_POST } = ACTIONS;
+const { SET_USER, LOGOUT_USER, DATA_LOADED, SET_ALL_USERS, SET_NEW_USER } =
+  ACTIONS;
 
 export default function appReducer(state, action) {
   switch (action.type) {
     case SET_USER:
-      localStorage.setItem("username", action.payload);
+      localStorage.setItem("userToken", action.payload.token);
       return {
         ...state,
-        username: action.payload,
+        user: action.payload,
+        userToken: action.payload.token,
       };
     case LOGOUT_USER:
-      localStorage.setItem("username", action.payload);
+      localStorage.removeItem("userToken");
       return {
         ...state,
-        username: action.payload,
+        user: {},
+        userToken: "",
       };
     case DATA_LOADED:
       return {
         ...state,
         isLoading: action.payload,
       };
-    case SET_ALL_POSTS:
+    case SET_ALL_USERS:
       let obj = {};
       action.payload.forEach((data) => {
         obj[data._id] = data;
       });
-      const updatedPosts = {
+      const updatedData = {
         ...obj,
       };
-      return { ...state, posts: updatedPosts };
-    case SET_NEW_POST:
-      let newPostObj = {};
-      newPostObj[action.payload._id] = action.payload;
-      return {...state, posts: {...state.posts, ...newPostObj}  };
+      return { ...state, users: updatedData };
+    case SET_NEW_USER:
+      let newDataObj = {};
+      newDataObj[action.payload._id] = action.payload;
+      return { ...state, users: { ...state.users, ...newDataObj } };
     default:
       return state;
   }
