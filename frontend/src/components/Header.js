@@ -119,10 +119,6 @@ export default function Header(props) {
   const { REACT_APP_AFTER_LOGIN_REDIRECT_URL, REACT_APP_PLATFORM_NAME } =
     process.env;
 
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
   const isMenuOpen = Boolean(anchorEl);
 
   const handleProfileMenuOpen = (event) => {
@@ -135,19 +131,6 @@ export default function Header(props) {
 
   const logoutUser = async () => {
     await removeUser();
-  };
-
-  const handlePostSubmission = async (event) => {
-    event.preventDefault();
-    const data = {
-      subject: postSubject,
-      description: postDescription,
-      username,
-    };
-    await submitPost(data);
-    setPostSubject("");
-    setPostDescription("");
-    handleClose();
   };
 
   const menuId = "primary-search-account-menu";
@@ -178,16 +161,6 @@ export default function Header(props) {
             </Link>
           </Typography>
           <div className={classes.grow} />
-          <Button
-            style={{
-              marginRight: "20px",
-              color: "#38d3d8",
-              fontWeight: "bold",
-            }}
-            onClick={handleOpen}
-          >
-            Create Post
-          </Button>
           <Typography>Hi, {user.firstname}</Typography>
           <div className={classes.sectionDesktop}>
             <IconButton
@@ -218,64 +191,6 @@ export default function Header(props) {
         </Toolbar>
       </AppBar>
       {renderMenu}
-
-      <Modal
-        show={open}
-        onHide={handleClose}
-        size="lg"
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-      >
-        <Modal.Header closeButton>
-          <Modal.Title id="contained-modal-title-vcenter">
-            Add A New Post
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Box id="modal-modal-description" style={{ width: "auto" }}>
-            <form onSubmit={handlePostSubmission} noValidate autoComplete="off">
-              <Box style={style.innerContainer}>
-                <FormControl margin="normal" style={style.innerContainer}>
-                  <TextField
-                    aria-label="subject"
-                    label="Subject"
-                    name="subject"
-                    type="text"
-                    value={postSubject}
-                    onChange={(e) => setPostSubject(e.target.value)}
-                    required
-                  />
-                </FormControl>
-
-                <FormControl margin="normal" style={style.innerContainer}>
-                  <textarea
-                    placeholder="Description"
-                    name="description"
-                    style={{
-                      borderBottom: "1px solid",
-                      outline: "none",
-                      fontSize: "15px",
-                      fontWeight: "normal",
-                      minHeight: 15,
-                      maxHeight: 150,
-                      height: 80,
-                      padding: 10
-                    }}
-                    value={postDescription}
-                    onChange={(e) => setPostDescription(e.target.value)}
-                    required
-                  />
-                </FormControl>
-                <Grid>
-                  <Button type="submit" variant="contained" size="large">
-                    Submit
-                  </Button>
-                </Grid>
-              </Box>
-            </form>
-          </Box>
-        </Modal.Body>
-      </Modal>
     </div>
   );
 }

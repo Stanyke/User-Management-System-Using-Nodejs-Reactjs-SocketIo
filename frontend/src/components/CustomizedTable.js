@@ -1,84 +1,55 @@
-import * as React from 'react';
-import { styled } from '@mui/material/styles';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import Button from '@mui/material/Button';
+import * as React from "react";
+import { styled } from "@mui/material/styles";
+import { Table, Badge } from "react-bootstrap";
 import useApp from "../store/contexts/AppContext";
 import { Link } from "react-router-dom";
 
-const {REACT_APP_VIEW_POST_URL} = process.env;
-
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
-  },
-}));
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:nth-of-type(odd)': {
-    backgroundColor: theme.palette.action.hover,
-  },
-  // hide last border
-  '&:last-child td, &:last-child th': {
-    border: 0,
-  },
-}));
-
-function createData(id, subject, description, username, time) {
-  return { id, subject, description, username, time };
-}
-
+const { REACT_APP_VIEW_POST_URL } = process.env;
 
 export default function CustomizedTables() {
   const {
-    appState: { posts },
+    appState: { users },
   } = useApp();
-  
-  const rows = Object.values(posts).map((post) => {
-    return (createData(post._id, post.subject, post.description, post.username, post.createdAt))
-  });
+
+  const badgeStatus = ["primary", "danger", "warning", "success", "info"];
 
   return (
-    <TableContainer component={Paper} style={{maxWidth: '800px', textAlign: 'center', maxHeight: '700px'}}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <StyledTableCell>S/N</StyledTableCell>
-            <StyledTableCell align="right">Subject</StyledTableCell>
-            <StyledTableCell align="right">Description</StyledTableCell>
-            <StyledTableCell align="right">Posted By</StyledTableCell>
-            <StyledTableCell align="right">Time</StyledTableCell>
-            <StyledTableCell align="right">Manage</StyledTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row, index) => (
-            <StyledTableRow key={row.id}>
-              <StyledTableCell component="th" scope="row">
-              <b>{`${index+1}`}</b>
-              </StyledTableCell>
-              <StyledTableCell align="right">{row.subject}</StyledTableCell>
-              <StyledTableCell align="right">{row.description}</StyledTableCell>
-              <StyledTableCell align="right">{row.username}</StyledTableCell>
-              <StyledTableCell align="right">{new Date (row.time).toDateString()}</StyledTableCell>
-              <StyledTableCell align="right">
-                <Link style={{ textDecoration: 'none' }} to={REACT_APP_VIEW_POST_URL+'/'+row.id}>
-                  <Button variant="contained">Preview</Button>
-                </Link>
-              </StyledTableCell>
-            </StyledTableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <Table striped bordered hover variant="dark" responsive>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Email</th>
+          <th>Department</th>
+          <th>Gender</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {Object.values(users).length
+          ? Object.keys(users).map((item, i) => {
+              return (
+                <tr key={users[item]._id}>
+                  <td>{i+1}</td>
+                  <td>{users[item].firstname}</td>
+                  <td>{users[item].lastname}</td>
+                  <td>{users[item].email}</td>
+                  <td>
+                    <Badge
+                      pill
+                      bg={badgeStatus[Math.floor(Math.random()*badgeStatus.length)]}
+                    >
+                      {users[item].department}
+                    </Badge>{" "}
+                  </td>
+                  <td>{users[item].gender}</td>
+                  <td>{new Date (users[item].createdAt).toDateString()}</td>
+                </tr>
+              );
+            })
+          : null}
+      </tbody>
+    </Table>
   );
 }

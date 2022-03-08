@@ -31,7 +31,7 @@ export default function Dashboard() {
     return (
       <>
         <Header user={user} />
-        {/* <Box className={classes.root}>
+        <Box className={classes.root}>
           <Box className="container">
             {Object.values(users).length ? (
               <CustomizedTables />
@@ -41,7 +41,7 @@ export default function Dashboard() {
               </Paper>
             )}
           </Box>
-        </Box> */}
+        </Box>
       </>
     );
   }

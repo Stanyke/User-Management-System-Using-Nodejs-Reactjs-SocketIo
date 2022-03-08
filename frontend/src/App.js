@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Auth from "./pages/Auth";
 import Dashboard from './pages/Dashboard';
-// import ViewPost from './pages/ViewPost';
 
 function App() {
   return (
@@ -11,7 +10,6 @@ function App() {
       <Routes>
         <Route path="/" element={<Auth />} />
         <Route path="/dashboard" exact element={<Dashboard />} />
-        {/* <Route path="/users/:id" exact component={ViewPost} /> */}
       </Routes>
     </BrowserRouter>
   );

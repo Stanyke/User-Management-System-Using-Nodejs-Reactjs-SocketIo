@@ -35,7 +35,7 @@ export default function appReducer(state, action) {
     case SET_NEW_USER:
       let newDataObj = {};
       newDataObj[action.payload._id] = action.payload;
-      return { ...state, users: { ...state.users, ...newDataObj } };
+      return { ...state, users: { ...newDataObj, ...state.users } };
     default:
       return state;
   }
