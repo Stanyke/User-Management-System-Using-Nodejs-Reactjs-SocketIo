@@ -109,70 +109,6 @@ function useApp() {
     });
   };
 
-  const submitUser = async (options) => {
-    try {
-      const { data } = await axios.user("/api/v1/users", options);
-      dispatch({
-        type: SET_NEW_USER,
-        payload: data.data,
-      });
-      socket.emit("newUser", data.data);
-    } catch (err) {
-      alert(err.response.data);
-    }
-  };
-
-  const getUserById = async (userId, command) => {
-    try {
-      !command && pageLoaderhandler(false);
-      const { data } = await axios.get(`/api/v1/users/${userId}`);
-      pageLoaderhandler(true);
-      return data.data;
-    } catch (err) {
-      alert(
-        "User with such id does not exist or internet connection is not available"
-      );
-      window.location = REACT_APP_AFTER_LOGIN_REDIRECT_URL;
-    }
-  };
-
-  const submitComment = async (options) => {
-    try {
-      await axios.user(`/api/v1/users/${options.userId}/comments`, options);
-      const data = await getUserById(options.userId, "dontLoad");
-      socket.emit("userAndAllComments", data);
-      return data;
-    } catch (err) {
-      alert(err.response.data);
-    }
-  };
-
-  const editUserComment = async (options) => {
-    try {
-      const { userId, commentId, message } = options;
-      await axios.patch(`/api/v1/users/${userId}/comments/${commentId}`, {
-        message,
-      });
-      const data = await getUserById(options.userId, "dontLoad");
-      socket.emit("userAndAllComments", data);
-      return data;
-    } catch (err) {
-      alert(err.response.data);
-    }
-  };
-
-  const deleteUserComment = async (options) => {
-    try {
-      const { userId, commentId } = options;
-      await axios.delete(`/api/v1/users/${userId}/comments/${commentId}`);
-      const data = await getUserById(userId, "dontLoad");
-      socket.emit("userAndAllComments", data);
-      return data;
-    } catch (err) {
-      alert(err.response.data);
-    }
-  };
-
   return {
     appState,
     dispatch,
@@ -181,12 +117,7 @@ function useApp() {
     showToast,
     getUsersFromDb,
     removeUser,
-    submitUser,
-    getUserById,
-    submitComment,
     socket,
-    editUserComment,
-    deleteUserComment,
   };
 }
 
