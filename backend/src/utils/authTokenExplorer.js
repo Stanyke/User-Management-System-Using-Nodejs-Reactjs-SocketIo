@@ -1,8 +1,9 @@
 const jwt = require("jsonwebtoken");
-const secret = process.env.JWT_SECRET;
+const { JWT_SECRET } = require("../../bin/config");
+const secret = JWT_SECRET;
 
 exports.generateToken = async (user) => {
-  const authToken = await jwt.sign({ id: user.id.toString() }, secret, {
+  const authToken = await jwt.sign({ id: user._id.toString() }, secret, {
     expiresIn: "12hrs",
   });
 

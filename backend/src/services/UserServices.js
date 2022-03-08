@@ -1,38 +1,19 @@
-const db = require("../../bin/db");
-
+const User = require("../models/UserModel");
 class UserService {
   async register(data) {
-    let [user] = await db("users").insert(data);
-    user = await this.findOne({ sn: user });
-    return user;
+    return await User.create(data);
   }
 
-  async findById(id, withPassword) {
-    let user = await db.select("*").from("users").where({ id });
-    user = user.length ? user[0] : null;
-    withPassword ? user : delete user?.password;
-    return user;
+  async findById(id) {
+    return await User.findById(id, "-__v");
   }
 
-  async findOne(data, withPassword) {
-    let user = await db.select("*").from("users").where(data);
-    user = user.length ? user[0] : null;
-    withPassword ? user : delete user?.password;
-    return user;
+  async findOne(data) {
+    return await User.findOne(data, "-__v");
   }
 
-  async updateWallet(amount, data) {
-    let user = await db("users")
-      .update({ account_balance: amount })
-      .where(data);
-    user = user ? true : false;
-    return user;
-  }
-
-  async deleteOne(data) {
-    let user = await db("users").del().where(data);
-    user = user ? true : false;
-    return user;
+  async findAll(data) {
+    return await User.find(data, "-__v");
   }
 }
 

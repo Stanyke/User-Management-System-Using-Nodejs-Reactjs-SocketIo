@@ -11,13 +11,9 @@ const MSG_TYPES = Object.freeze({
   NO_TOKEN: "No token provided",
   INVALID_TOKEN: "Invalid token provided",
   LOGGED_IN: "Successfully logged in",
+  USER_CREATED: "Registration successful",
   EMAIL_EXIST: "Email address already in use",
   INVALID_CREDENTIALS: "Invalid credentials",
-  FUND_FAILED: "Funding failed",
-  SELF_FUNDING_FAILED: "Self funding failed",
-  TRANSACTION_FAILED: "Transaction failed",
-  TRANSACTION_COMPLETED: "Transaction completed",
-  AMOUNT_EXCEEDS: "Amount exceeds wallet balance",
   PERMISSION: "You don't have enough permission to perform this action",
   SERVER_ERROR: (msg) => {
     return msg || "An internal error occurred. Try again";

@@ -6,8 +6,6 @@ const {
   UserRegistrationSchema,
   UserIdSchema,
   UserLoginSchema,
-  FundWalletSchema,
-  TransferWalletFundSchema
 } = require("../validators/UserSchema");
 
 module.exports = function () {
@@ -19,25 +17,13 @@ module.exports = function () {
 
   router.post("/users/login", joiValidator(UserLoginSchema), userCtrl.login);
 
-  router.post(
-    "/users/wallet/add-fund",
-    joiValidator(FundWalletSchema),
-    identify,
-    userCtrl.fundWallet
-  );
+  router.get("/users", identify, userCtrl.getAllUsers);
 
-  router.post(
-    "/users/wallet/transfer-fund",
-    joiValidator(TransferWalletFundSchema),
+  router.get(
+    "/users/:id",
+    joiValidator(UserIdSchema),
     identify,
-    userCtrl.transferWalletFund
-  );
-
-  router.post(
-    "/users/wallet/withdraw-fund",
-    joiValidator(FundWalletSchema),
-    identify,
-    userCtrl.withdrawWalletFund
+    userCtrl.getOneUser
   );
 
   return router;
