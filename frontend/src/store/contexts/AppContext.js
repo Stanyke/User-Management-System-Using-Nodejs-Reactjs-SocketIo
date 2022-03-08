@@ -50,6 +50,7 @@ function useApp() {
   const loginUser = async (options) => {
     try {
       const { data } = await axios.post("/api/v1/users/login", options);
+      showToast("Login Successful");
       dispatch({
         type: SET_USER,
         payload: data.data,
@@ -63,6 +64,7 @@ function useApp() {
   const registerUser = async (options) => {
     try {
       const { data } = await axios.post("/api/v1/users/register", options);
+      showToast("Registration Successful");
       dispatch({
         type: SET_USER,
         payload: data.data,
@@ -103,6 +105,7 @@ function useApp() {
   };
 
   const removeUser = async () => {
+    showToast("Logout Successful");
     dispatch({
       type: LOGOUT_USER,
       payload: "",
